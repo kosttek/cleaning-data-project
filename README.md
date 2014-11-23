@@ -93,3 +93,32 @@ cleaning-data-project
 2. source("run_analysis.R")
 
 as a result you should get file tiny tidydataset.txt in main directory
+
+## How script works
+
+There was five step to do in our run_analysis.R script
+
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement. 
+3. Uses descriptive activity names to name the activities in the data set
+4. Appropriately labels the data set with descriptive variable names.  
+5 .From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+Every above step or part of these step are marked in script file like   
+      #2# Merges the training and the test sets to create one data set.   
+Which for example coresponds to secound step  
+
+* First of all we get all data from training and test sets also we get features and activity labels.
+
+* Next we get only this variables from X set which have "std" and "mean" in name
+ this is what grep.mean.and.std() function do.
+ After running function grep.mean.and.std there is also vector of column names in resault which should be applied to data set.
+
+* After this, we are merging train and test data and change names of columns subject and activity
+ this is what bind.test.train() function do.
+
+* Uses descriptive activity names to name the activities in the data set
+
+* tidy data set create by melting and casting data using function mean. 
+
+* save data with tiny data set to file "tidydataset.txt"

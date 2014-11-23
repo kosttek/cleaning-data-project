@@ -1,3 +1,5 @@
+library(reshape2)
+
 file.sep <- .Platform$file.sep
 dir.main <- "UCI HAR Dataset"
 dir.test <- paste(dir.main,"test",sep=file.sep)
@@ -19,27 +21,20 @@ subject.train <- read.csv(paste(dir.train,"subject_train.txt",sep=file.sep),sep=
 #get activity labels
  activity.labels <- read.csv(file.activitylabels,sep="",header=FALSE,stringsAsFactors=FALSE)
 
- grep.mean.and.std <- function(){
+grep.mean.and.std <- function(){
      # get only vriables coresponding to mean and standard deviation
      std.names <-grep("std",features[,2],value=TRUE)
      mean.names <-grep("mean",features[,2],value=TRUE)
      std.indexes <-grep("std",features[,2],value=FALSE)
      mean.indexes <-grep("mean",features[,2],value=FALSE)
-     
-
-
-
      list(indexes=c(std.indexes,mean.indexes), names=c(std.names,mean.names) )
 }
-
-
-
 
 bind.test.train <- function(){
 #4# Appropriately labels the data set with descriptive variable names.
 # only first two columns subject and activity
     subject.name <- "subject"
-    activity.name <- "activty"
+    activity.name <- "activity"
     colnames(y.test) <-  c(activity.name)
     colnames(y.train) <- c(activity.name)
     colnames(subject.test) <- c(subject.name)
@@ -65,8 +60,13 @@ alldata <- bind.test.train()
 
 #3#Uses descriptive activity names to name the activities in the data set
 unlist(activity.labels[2])
-ac.f <- factor(alldata$activty, labels = unlist(activity.labels[2]))
+ac.f <- factor(alldata$activity, labels = unlist(activity.labels[2]))
 ac.str <- as.character(ac.f)
 
-alldata$activty <- ac.str
+alldata$activity <- ac.str
 
+#5# tidy data set
+mm <- melt(alldata,id = c("subject","activity"))
+tidydata <- dcast(mm,subject + activity ~ variable,mean)
+
+write.table(tidydata, file="tidydataset.txt",row.names=FALSE)
